@@ -9,7 +9,7 @@ self.addEventListener('install', function(event) {
           '/result.html',
           '/script.js',
           '/service-worker.js',
-          '/images/logo.jpg',
+          '/Images/logo.jpg',
           '/manifest.json',
         ]);
       })
