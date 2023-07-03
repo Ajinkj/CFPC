@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carbon Footprint Calculator - Result</title>
+  <!-- Open Graph meta tags -->
+  <meta property="og:title" content="Carbon Footprint Calculator">
+  <meta property="og:description" content="Calculate and reduce your carbon footprint.">
+  <meta property="og:image" content="Images/logo.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    /* Additional custom styling */
+    body {
+      padding-top: 50px;
+    }
+    .container {
+      max-width: 500px;
+    }
+    .result-card {
+      margin-top: 20px;
+    }
+    .check-carbon-footprint {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 24px;
+      color: #333;
+    }
+    .check-carbon-footprint button {
+      margin-top: 10px;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      margin-top: 50px;
+    }
+
+    .footer p {
+      margin-bottom: 0;
+    }
+
+    .footer a {
+      color: #000000;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .footer::after {
+      content: " \00b7 ";
+    }
+
+    .footer span {
+      font-size: 12px;
+      color: #6c757d;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <!-- Add manifest file for PWA -->
+  <link rel="manifest" href="manifest.json">
+  <!-- Add service worker for offline support -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="index.html">Carbon Footprint Calculator</a>
+  </nav>
+  
+  <div class="container">
+    <div class="result-card card">
+      <h5 class="card-header">Your Carbon Footprint</h5>
+      <div class="card-body">
+        <canvas id="chart"></canvas>
+        <h1 class="card-title" id="emissionsValue"></h1>
+        <p class="card-text">kg CO2e</p>
+        <p class="card-text" id="comparisonText"></p>
+        
+        <div class="share-buttons">
+          <a class="btn btn-primary" href="https://www.facebook.com/sharer/sharer.php?u=https://ajinkj.github.io/CarbonFootprintCalculator/" target="_blank">
+            <i class="fab fa-facebook-f"></i> Share on Facebook
+          </a>
+          <a class="btn btn-success" id="whatsappShareBtn" href="#" data-action="share/whatsapp/share" target="_blank">
+            <i class="fab fa-whatsapp"></i> Share on WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="result-card card">
+        <h5 class="card-header text-center">Check your Carbon Footprint</h5>
+        <div class="card-body text-center">
+          <p class="card-text">
+            <a href="index.html" class="btn btn-info">Calculate Now</a>
+          </p>
+        </div>
+      </div>
+      
+    <div class="result-card card">
+      <h5 class="card-header">Tips to Reduce Carbon Footprint</h5>
+      <div class="card-body">
+        <ul class="card-text">
+          <li>Use energy-efficient appliances and light bulbs</li>
+          <li>Reduce, reuse, and recycle waste</li>
+          <li>Opt for public transportation, biking, or walking whenever possible</li>
+          <li>Eat more plant-based meals and locally sourced food</li>
+          <li>Offset your carbon emissions through verified carbon offset projects</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Get the emissions value from the URL parameter
+    var urlParams = new URLSearchParams(window.location.search);
+    var emissions = parseFloat(urlParams.get("emissions"));
+    var averageEmissionsIndia = parseFloat(urlParams.get("averageEmissionsIndia"));
+
+    // Display the emissions value on the result page
+    document.getElementById("emissionsValue").innerText = emissions.toFixed(2);
+
+    // Create a bar chart to visualize the emissions value and average emissions
+    var chart = new Chart(document.getElementById('chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Carbon Footprint'],
+        datasets: [{
+          label: 'Your Emissions (kg CO2e)',
+          data: [emissions],
+          backgroundColor: 'rgba(54, 162, 235, 0.5)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }, {
+          label: 'Average Emissions in India (kg CO2e)',
+          data: [averageEmissionsIndia],
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              precision: 0
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        }
+      }
+    });
+
+    // Display alert message based on the comparison with average emissions
+    var comparisonText = document.getElementById("comparisonText");
+    if (emissions > averageEmissionsIndia) {
+      comparisonText.innerText = "Your carbon footprint is above the average in India. Consider reducing your emissions.";
+      comparisonText.style.color = "red";
+    } else {
+      comparisonText.innerText = "Congratulations! Your carbon footprint is below the average in India.";
+      comparisonText.style.color = "green";
+    }
+
+    // Get the WhatsApp share link element
+    var whatsappShareLink = document.getElementById("whatsappShareBtn");
+
+    // Build the share message
+    var shareMessage = "My carbon footprint is " + emissions + " kg CO2e. Reduce your carbon footprint!\n Check Your Carbon Footprint Now\n";
+
+    // Build the WhatsApp share link with the message and website URL
+    var whatsappShareURL = "whatsapp://send?text=" + encodeURIComponent(shareMessage) + encodeURIComponent(window.location.href);
+
+    // Set the updated href attribute of the WhatsApp share link
+    whatsappShareLink.href = whatsappShareURL;
+  </script>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+<footer class="footer">
+    <div class="container text-center">
+      <p>Developed by <a href="https://github.com/Ajinkj">AJIN K J</a><br> &copy; 2023 All rights reserved</p>
+    </div>
+  </footer>
+  
+</html>

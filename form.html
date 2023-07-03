@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carbon Footprint Calculator - Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Open Graph meta tags -->
+  <meta property="og:title" content="Carbon Footprint Calculator">
+  <meta property="og:description" content="Calculate and reduce your carbon footprint.">
+  <meta property="og:image" content="Images/logo.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    /* Additional custom styling */
+    body {
+      padding-top: 50px;
+    }
+    .container {
+      max-width: 500px;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 20px;
+      margin-top: 50px;
+    }
+
+    .footer p {
+      margin-bottom: 0;
+    }
+
+    .footer a {
+      color: #000000;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .footer::after {
+      content: " \00b7 ";
+    }
+
+    .footer span {
+      font-size: 12px;
+      color: #6c757d;
+    }
+  </style>
+  <!-- Add manifest file for PWA -->
+  <link rel="manifest" href="manifest.json">
+  <!-- Add service worker for offline support -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function(err) {
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="index.html">Carbon Footprint Calculator</a>
+  </nav>
+  
+  <div class="container">
+    <br>
+    <h1 class="display-4" style="font-size: 40px;"><b>Carbon Footprint Calculator</b></h1>
+    <hr>
+    <form id="carbonForm">
+      <div class="form-group">
+        <label for="electricityConsumption">Electricity Consumption (kWh)</label>
+        <input type="text" class="form-control" id="electricityConsumption" placeholder="Enter electricity consumption">
+      </div>
+      
+      <div class="form-group">
+        <label for="carDistance">Car Distance Traveled (km)</label>
+        <input type="text" class="form-control" id="carDistance" placeholder="Enter car distance traveled">
+      </div>
+      
+      <!-- Add more input fields for other activities -->
+      
+      <button type="submit" class="btn btn-primary">Calculate</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+<footer class="footer">
+    <div class="container text-center">
+      <p>Developed by <a href="https://github.com/Ajinkj">AJIN K J</a><br> &copy; 2023 All rights reserved</p>
+    </div>
+  </footer>
+</html>
