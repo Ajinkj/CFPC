@@ -12,6 +12,7 @@
   <link rel="icon" href="Images/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <style>
     /* Additional custom styling */
     body {
@@ -20,48 +21,60 @@
     .container {
       max-width: 500px;
     }
+    .parameter-buttons {
+      margin-bottom: 20px;
+    }
+    .parameter-buttons .btn {
+      margin-right: 10px;
+      width: 100px;
+    }
+    .form-group {
+      display: none;
+    }
+    .active-form-group {
+      display: block;
+    }
     .footer {
       background-color: #f8f9fa;
       padding: 20px;
       margin-top: 50px;
     }
-
     .footer p {
       margin-bottom: 0;
     }
-
     .footer a {
       color: #000000;
       text-decoration: none;
     }
-
     .footer a:hover {
       text-decoration: underline;
     }
-
     .footer::after {
       content: " \00b7 ";
     }
-
     .footer span {
       font-size: 12px;
       color: #6c757d;
     }
-  </style>
-  <!-- Add manifest file for PWA -->
-  <link rel="manifest" href="manifest.json">
-  <!-- Add service worker for offline support -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }, function(err) {
-          console.log('ServiceWorker registration failed: ', err);
-        });
-      });
+    .prompt-text {
+      margin-top: 20px;
+      font-style: italic;
     }
-  </script>
+    .calculate-button {
+      margin-top: 20px;
+    }
+    .container h1, h6 {
+      text-align: center; /* Align form heading to center */
+    }
+    .parameter-buttons {
+      display: flex;
+      justify-content: center; /* Align buttons to center */
+      margin-bottom: 20px;
+    }
+    .parameter-buttons button {
+      margin: 0 10px; /* Add some spacing between buttons */
+    }
+  </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -70,30 +83,149 @@
   
   <div class="container">
     <br>
-    <h1 class="display-4" style="font-size: 40px;"><b>Carbon Footprint Calculator</b></h1>
+    <h1 class="display-4"  style="font-size: 40px;"><b>Carbon Footprint Calculator</b></h1>
     <hr>
-    <form id="carbonForm">
-      <div class="form-group">
+    <h6>Choose all the parameter that's applicable for you.</h6>
+    <h6><b>Monthly Data</b></h6>
+    <hr>
+    <div class="parameter-buttons">
+      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="toggleForm('electricity')"> <i class="fas fa-bolt"></i> Electricity</button>
+      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="toggleForm('car')"> <i class="fas fa-car"></i> Car</button>
+      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="toggleForm('bike')"> <i class="fas fa-bicycle"></i> Bike</button>
+      </div>
+      <div class="parameter-buttons">
+      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="toggleForm('meat')"> <i class="fas fa-drumstick-bite"></i> Meat</button>
+      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="toggleForm('dairy')"> <i class="fas fa-cheese"></i> Dairy</button>
+      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="toggleForm('otherFood')"> <i class="fas fa-utensils"></i> Other Food</button>
+    </div>
+      <div class="parameter-buttons">
+      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="toggleForm('waste')"> <i class="fas fa-trash"></i> Waste</button>
+      <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off" onclick="toggleForm('recycling')"> <i class="fas fa-recycle"></i> Recycling</button>
+    </div>
+    <hr>
+    <form id="carbonForm" style="display: none;">
+      <div class="form-group" id="electricityForm">
         <label for="electricityConsumption">Electricity Consumption (kWh)</label>
         <input type="text" class="form-control" id="electricityConsumption" placeholder="Enter electricity consumption">
       </div>
       
-      <div class="form-group">
+      <div class="form-group" id="carForm">
         <label for="carDistance">Car Distance Traveled (km)</label>
         <input type="text" class="form-control" id="carDistance" placeholder="Enter car distance traveled">
+        <label for="carMileage">Car Mileage (km/liter)</label>
+        <input type="text" class="form-control" id="carMileage" placeholder="Enter car mileage">
+        <label for="carFuel">Car Fuel Type</label>
+        <select class="form-control" id="carFuel">
+          <option value="petrol">Petrol</option>
+          <option value="diesel">Diesel</option>
+        </select>
       </div>
       
-      <!-- Add more input fields for other activities -->
+      <div class="form-group" id="bikeForm">
+        <label for="bikeDistance">Bike Distance Traveled (km)</label>
+        <input type="text" class="form-control" id="bikeDistance" placeholder="Enter bike distance traveled">
+        <label for="bikeMileage">Bike Mileage (km/liter)</label>
+        <input type="text" class="form-control" id="bikeMileage" placeholder="Enter bike mileage">
+        <input type="hidden" id="bikeFuel" value="petrol">
+      </div>
       
-      <button type="submit" class="btn btn-primary">Calculate</button>
+      <div class="form-group" id="meatForm">
+        <label for="meatConsumption">Meat Consumption (kg)</label>
+        <input type="text" class="form-control" id="meatConsumption" placeholder="Enter meat consumption">
+      </div>
+      
+      <div class="form-group" id="dairyForm">
+        <label for="dairyConsumption">Dairy Consumption (kg)</label>
+        <input type="text" class="form-control" id="dairyConsumption" placeholder="Enter dairy consumption">
+      </div>
+      
+      <div class="form-group" id="otherFoodForm">
+        <label for="otherFoodConsumption">Other Food Consumption (kg)</label>
+        <input type="text" class="form-control" id="otherFoodConsumption" placeholder="Enter other food consumption">
+      </div>
+      
+      <div class="form-group" id="wasteForm">
+        <label for="wasteGeneration">Waste Generation (kg)</label>
+        <input type="text" class="form-control" id="wasteGeneration" placeholder="Enter waste generation">
+      </div>
+      
+      <div class="form-group" id="recyclingForm">
+        <label for="recyclingAmount">Recycling Amount (kg)</label>
+        <input type="text" class="form-control" id="recyclingAmount" placeholder="Enter recycling amount">
+      </div>
+      
+      <div class="prompt-text">
+        Enter data for all the parameters that are applicable to you and click the Calculate button to get the carbon emission results.
+      </div>
+      
+      <button type="submit" class="btn btn-primary calculate-button">Calculate</button>
     </form>
   </div>
 
-  <script src="script.js"></script>
+  <!-- <script src="script.js"></script> -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script>
+    function toggleForm(parameter) {
+      var formGroups = document.getElementsByClassName('form-group');
+      for (var i = 0; i < formGroups.length; i++) {
+        formGroups[i].classList.remove('active-form-group');
+      }
+      
+      var activeFormGroup = document.getElementById(parameter + 'Form');
+      activeFormGroup.classList.toggle('active-form-group');
+      document.getElementById('carbonForm').style.display = 'block';
+    }
+    
+    document.getElementById("carbonForm").addEventListener("submit", function(event) {
+  event.preventDefault(); // Prevent form submission
+
+  var averageEmissionsIndia = 315;//estimated value, Average Carbon Footprint Emission: 10.5 kg CO2e per day
+  // Get user input values
+  var electricityConsumption = parseFloat(document.getElementById("electricityConsumption").value) || 0;
+  var carDistance = parseFloat(document.getElementById("carDistance").value) || 0;
+  var carMileage = parseFloat(document.getElementById("carMileage").value) || 0;
+  var carFuel = document.getElementById("carFuel").value;
+  var bikeDistance = parseFloat(document.getElementById("bikeDistance").value) || 0;
+  var bikeMileage = parseFloat(document.getElementById("bikeMileage").value) || 0;
+  var meatConsumption = parseFloat(document.getElementById("meatConsumption").value) || 0;
+  var dairyConsumption = parseFloat(document.getElementById("dairyConsumption").value) || 0;
+  var otherFoodConsumption = parseFloat(document.getElementById("otherFoodConsumption").value) || 0;
+  var wasteGeneration = parseFloat(document.getElementById("wasteGeneration").value) || 0;
+  var recyclingAmount = parseFloat(document.getElementById("recyclingAmount").value) || 0;
+
+  // Conversion factors (emission factors for each parameter)
+  var electricityConversionFactor = 0.5; // kg CO2e/kWh
+  var petrolConversionFactor = 2.31; // kg CO2e/liter
+  var dieselConversionFactor = 2.68; // kg CO2e/liter
+  var meatConversionFactor = 10.3; // kg CO2e/kg
+  var dairyConversionFactor = 3.2; // kg CO2e/kg
+  var otherFoodConversionFactor = 2.7; // kg CO2e/kg
+  var wasteConversionFactor = 0.45; // kg CO2e/kg
+  var recyclingConversionFactor = -0.5; // kg CO2e/kg
+
+  // Calculate carbon footprint
+  var electricityEmissions = electricityConsumption * electricityConversionFactor;
+  var carEmissions = (carDistance && carMileage) ? (carDistance / carMileage) * ((carFuel === 'petrol') ? petrolConversionFactor : dieselConversionFactor) : 0;
+  var bikeEmissions = (bikeDistance && bikeMileage) ? (bikeDistance / bikeMileage) * petrolConversionFactor : 0;
+  var meatEmissions = meatConsumption * meatConversionFactor;
+  var dairyEmissions = dairyConsumption * dairyConversionFactor;
+  var otherFoodEmissions = otherFoodConsumption * otherFoodConversionFactor;
+  var wasteEmissions = wasteGeneration * wasteConversionFactor;
+  var recyclingEmissions = recyclingAmount * recyclingConversionFactor;
+
+  // Add up all the emissions to get the total carbon footprint
+  var totalEmissions = electricityEmissions + carEmissions + bikeEmissions +
+    meatEmissions + dairyEmissions + otherFoodEmissions + wasteEmissions + recyclingEmissions;
+
+  // Redirect to the result page and pass the calculated emissions as a URL parameter
+  window.location.href = "result.html?emissions=" + totalEmissions.toFixed(2)+ "&averageEmissionsIndia=" + averageEmissionsIndia.toFixed(2);
+});
+
+  </script>
 </body>
 <footer class="footer">
     <div class="container text-center">
-      <p>Developed by <a href="https://github.com/Ajinkj">AJIN K J</a><br> &copy; 2023 All rights reserved</p>
+      <p>Developed by <a href="https://ajinkj.github.io/">AJIN K J</a><br> &copy; 2023 All rights reserved</p>
     </div>
   </footer>
 </html>
